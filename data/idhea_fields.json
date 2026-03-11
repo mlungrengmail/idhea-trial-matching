@@ -1,0 +1,164 @@
+[
+  {
+    "field_name": "age",
+    "modality": "demographics",
+    "definition": "Patient age in years (nearest month), computed from date of birth",
+    "direct_use": "Min/max age inclusion/exclusion criteria",
+    "limitations": "None for age-based criteria",
+    "tier": 1,
+    "confidence_for_prescreening": "direct"
+  },
+  {
+    "field_name": "sex",
+    "modality": "demographics",
+    "definition": "Male / Female / n/a",
+    "direct_use": "Sex-specific eligibility filtering",
+    "limitations": "~5% of trials have sex-specific criteria",
+    "tier": 1,
+    "confidence_for_prescreening": "direct"
+  },
+  {
+    "field_name": "etdrs_grid_center",
+    "modality": "oct",
+    "definition": "Central subfield thickness (CST) from ETDRS Grid center zone, in micrometers",
+    "direct_use": "CST threshold comparisons (e.g., >=350 um for DME trials)",
+    "limitations": "Device-specific normative ranges; sex-dependent thresholds in some protocols (e.g., THULITE uses >=305 um female, >=320 um male). Not interchangeable across OCT vendors without calibration.",
+    "tier": 1,
+    "confidence_for_prescreening": "direct"
+  },
+  {
+    "field_name": "etdrs_grid_inner_outer",
+    "modality": "oct",
+    "definition": "Inner and outer ETDRS ring sector thicknesses, in micrometers",
+    "direct_use": "Macular thickness assessments, edema extent mapping",
+    "limitations": "Few trials use non-center ETDRS sectors as primary criteria",
+    "tier": 1,
+    "confidence_for_prescreening": "direct"
+  },
+  {
+    "field_name": "iro",
+    "modality": "oct_ai",
+    "definition": "Intraretinal fluid detection (binary presence + B-scan count) from RETscreenAI",
+    "direct_use": "Presence/absence of intraretinal fluid for DME, RVO, wet AMD trials",
+    "limitations": "Binary flag, not volumetric quantification. Not validated against reading center grading. Model performance characteristics not publicly benchmarked against trial-grade assessment.",
+    "tier": 2,
+    "confidence_for_prescreening": "direct"
+  },
+  {
+    "field_name": "sro",
+    "modality": "oct_ai",
+    "definition": "Subretinal fluid detection (binary presence + B-scan count) from RETscreenAI",
+    "direct_use": "Presence/absence of subretinal fluid for wet AMD, DME trials",
+    "limitations": "Binary flag, not volumetric. Same validation caveats as IRO.",
+    "tier": 2,
+    "confidence_for_prescreening": "direct"
+  },
+  {
+    "field_name": "ped",
+    "modality": "oct_ai",
+    "definition": "Pigment epithelial detachment detection (binary + B-scan count) from RETscreenAI",
+    "direct_use": "PED presence criteria in wet AMD trials",
+    "limitations": "Binary flag. Does not differentiate PED subtypes (serous, fibrovascular, drusenoid).",
+    "tier": 2,
+    "confidence_for_prescreening": "direct"
+  },
+  {
+    "field_name": "rpe_loss",
+    "modality": "oct_ai",
+    "definition": "RPE atrophy / loss detection (binary + B-scan count) from RETscreenAI",
+    "direct_use": "Geographic atrophy identification for GA trials",
+    "limitations": "Binary flag. Does not quantify GA lesion area (mm2), which many GA trials require. Not equivalent to FAF-based GA measurement.",
+    "tier": 2,
+    "confidence_for_prescreening": "partial"
+  },
+  {
+    "field_name": "rnfl_thickness",
+    "modality": "oct",
+    "definition": "Retinal nerve fiber layer thickness from TSNIT Circle (4/6/12/36 sector maps), in micrometers",
+    "direct_use": "RNFL thinning criteria in glaucoma trials",
+    "limitations": "Structural measure only. Does not confirm glaucoma diagnosis (requires IOP, visual field, clinical exam).",
+    "tier": 1,
+    "confidence_for_prescreening": "partial"
+  },
+  {
+    "field_name": "gcl_thickness",
+    "modality": "oct",
+    "definition": "Ganglion cell layer thickness (GCL+ and GCL++) from macular scans, in micrometers",
+    "direct_use": "GCL thinning in glaucoma and neurodegeneration trials",
+    "limitations": "Same as RNFL -- structural only, not diagnostic.",
+    "tier": 1,
+    "confidence_for_prescreening": "partial"
+  },
+  {
+    "field_name": "cd_ratio",
+    "modality": "oct",
+    "definition": "Cup-to-disc ratio from disc topography analysis",
+    "direct_use": "C/D ratio thresholds in glaucoma trials",
+    "limitations": "High C/D alone is not diagnostic. Many glaucoma trials also require IOP and visual field data.",
+    "tier": 1,
+    "confidence_for_prescreening": "partial"
+  },
+  {
+    "field_name": "axial_length",
+    "modality": "oct_derived",
+    "definition": "Estimated axial length in mm, derived from OCT measurements",
+    "direct_use": "High myopia exclusion (>26mm or equivalent diopter threshold)",
+    "limitations": "Estimate, not direct biometry measurement. Precision compared to IOLMaster/Lenstar unknown.",
+    "tier": 2,
+    "confidence_for_prescreening": "partial"
+  },
+  {
+    "field_name": "oct_glaucoma_score",
+    "modality": "oct_ai",
+    "definition": "Multi-factorial OCT score (0-100) for glaucoma risk from proprietary algorithm",
+    "direct_use": "Glaucoma risk stratification",
+    "limitations": "Proprietary score, not a clinical staging system. Not mapped to standard glaucoma severity scales.",
+    "tier": 2,
+    "confidence_for_prescreening": "partial"
+  },
+  {
+    "field_name": "vessel_features",
+    "modality": "cfp_ai",
+    "definition": "Retinal vessel density, tortuosity, and width from AutoMorph CFP analysis",
+    "direct_use": "Vascular disease severity indicators",
+    "limitations": "Indirect markers. Not equivalent to DRSS grading or fluorescein angiography findings. No established mapping to trial eligibility thresholds.",
+    "tier": 2,
+    "confidence_for_prescreening": "partial"
+  },
+  {
+    "field_name": "retinal_pigment_score",
+    "modality": "cfp_ai",
+    "definition": "Retinal pigmentation score (unitless) from CFP analysis",
+    "direct_use": "Pigmentation-related criteria, RPE change indicators",
+    "limitations": "Not a standard clinical measure. No direct trial criterion maps to this score.",
+    "tier": 2,
+    "confidence_for_prescreening": "partial"
+  },
+  {
+    "field_name": "retfound_oct_embedding",
+    "modality": "oct_ai",
+    "definition": "1024-dimensional feature vector from RETFound foundation model applied to OCT images",
+    "direct_use": "Future classifier input for disease classification and severity staging",
+    "limitations": "Raw embedding, not a clinical output. Requires a trained and validated downstream classifier to be useful for pre-screening. No such classifier currently exists in the iDHEA pipeline.",
+    "tier": 2,
+    "confidence_for_prescreening": "not_evaluable"
+  },
+  {
+    "field_name": "retfound_cfp_embedding",
+    "modality": "cfp_ai",
+    "definition": "1024-dimensional feature vector from RETFound foundation model applied to CFP images",
+    "direct_use": "Future classifier input for disease screening and cohort similarity",
+    "limitations": "Same as OCT embedding -- requires validated downstream classifier.",
+    "tier": 2,
+    "confidence_for_prescreening": "not_evaluable"
+  },
+  {
+    "field_name": "disc_features_automorph",
+    "modality": "cfp_ai",
+    "definition": "Optic disc morphology features from AutoMorph CFP analysis",
+    "direct_use": "Disc assessment for glaucoma-related screening",
+    "limitations": "CFP-based disc features are less precise than OCT disc topography. Not validated against trial-grade optic disc assessment.",
+    "tier": 2,
+    "confidence_for_prescreening": "partial"
+  }
+]
