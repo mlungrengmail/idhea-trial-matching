@@ -126,10 +126,7 @@ def main():
     # ── Output existence ──
     print("\n[8] Output files...")
     expected_outputs = [
-        "trial_prescreening_mapping.md",
         "trial_prescreening_qa.xlsx",
-        "technical_readout.docx",
-        "gtm_pharma_deck.pptx",
     ]
     for fname in expected_outputs:
         path = OUTPUTS / fname

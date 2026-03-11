@@ -3,8 +3,8 @@
 ## Purpose
 
 Pipeline that maps iDHEA Primary Eye Care dataset fields against Phase II/III
-ophthalmic clinical trials. Generates three artifacts from one structured
-evidence base: QA workbook, technical readout, GTM deck.
+ophthalmic clinical trials. Generates a QA workbook from one structured
+evidence base.
 
 ## Commands
 
@@ -33,6 +33,4 @@ Generation scripts read `data/`, write to `outputs/`. Never hand-edit outputs.
   features -- they are future classifier inputs
 - Do not conflate unique trial counts with condition-membership counts
 - Every headline number must trace back to a `data/` row or cited external source
-- "No new imaging capture needed for anatomy-only pre-screening" -- not
-  "zero new data capture needed"
 - All outputs go to `outputs/` -- never repo root
