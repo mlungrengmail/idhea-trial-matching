@@ -24,6 +24,17 @@ uv sync
 uv run python scripts/generate_all.py
 ```
 
+Optional LLM-assisted extraction:
+
+```bash
+$env:TRIAL_MATCHING_EXTRACTOR_MODE="hybrid"
+$env:TRIAL_MATCHING_LLM_API_KEY="..."
+$env:TRIAL_MATCHING_LLM_MODEL="gpt-4.1-mini"
+uv run python scripts/generate_all.py
+```
+
+The LLM path uses an OpenAI-compatible chat endpoint and keeps the rest of the pipeline unchanged. `deterministic` remains the default when no LLM settings are supplied.
+
 Or run the pipeline in stages:
 
 ```bash
@@ -44,6 +55,7 @@ uv run python scripts/validate.py
    Fetches raw ClinicalTrials.gov hits, saves raw snapshots, applies deterministic condition filtering, and writes curated trial outputs.
 3. `extract_trial_rules.py`
    Builds `NCT x criterion` rule mappings from eligibility text.
+   `extract_trial_rules_llm.py` adds optional `llm` or `hybrid` reasoning when an API key and model are configured.
 4. `generate_metrics.py`
    Freezes canonical counts used everywhere else.
 5. `export_csv.py`
@@ -64,6 +76,7 @@ uv run python scripts/validate.py
   - `direct`: iDHEA has a directly relevant field for anatomy-first pre-screening.
   - `partial`: iDHEA has a useful proxy but not a protocol-complete measure.
   - `not_evaluable`: the criterion depends on data outside the public iDHEA field set.
+  Rows can be produced by deterministic parsing, LLM extraction, or hybrid union; the `extraction_method`, `model_name`, `evidence_excerpt`, and `reasoning` fields keep that audit trail visible.
 - `trials_labeled.csv`
   One row per curated trial with GTM-oriented labels such as `prescreening_fit`, `gtm_priority`, and missing-data flags.
 

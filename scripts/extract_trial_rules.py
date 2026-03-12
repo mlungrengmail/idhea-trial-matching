@@ -89,6 +89,10 @@ def create_rule(
         "manual_review_required": manual_review_required,
         "human_verified": False,
         "evidence_url": evidence_url,
+        "extraction_method": "deterministic",
+        "evidence_excerpt": criterion_text_original,
+        "reasoning": "",
+        "model_name": "",
     }
 
 

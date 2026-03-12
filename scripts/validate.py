@@ -194,6 +194,10 @@ def run_validation() -> dict:
                 "confidence",
                 "manual_review_required",
                 "human_verified",
+                "extraction_method",
+                "model_name",
+                "evidence_excerpt",
+                "reasoning",
                 "evidence_url",
             ],
         )

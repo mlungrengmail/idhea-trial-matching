@@ -288,6 +288,10 @@ def build_trial_rules_rows(rules: list[dict], trial_lookup: dict[str, dict]) -> 
                 "confidence": row["confidence"],
                 "manual_review_required": row["manual_review_required"],
                 "human_verified": row["human_verified"],
+                "extraction_method": row.get("extraction_method", ""),
+                "model_name": row.get("model_name", ""),
+                "evidence_excerpt": row.get("evidence_excerpt", ""),
+                "reasoning": row.get("reasoning", ""),
                 "evidence_url": row["evidence_url"],
             }
         )
@@ -378,6 +382,10 @@ def generate() -> dict:
             "confidence",
             "manual_review_required",
             "human_verified",
+            "extraction_method",
+            "model_name",
+            "evidence_excerpt",
+            "reasoning",
             "evidence_url",
         ],
     )

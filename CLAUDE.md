@@ -13,6 +13,15 @@ uv run python scripts/validate.py
 uv run pytest
 ```
 
+Optional LLM-assisted extraction:
+
+```bash
+$env:TRIAL_MATCHING_EXTRACTOR_MODE="hybrid"
+$env:TRIAL_MATCHING_LLM_API_KEY="..."
+$env:TRIAL_MATCHING_LLM_MODEL="gpt-4.1-mini"
+uv run python scripts/generate_all.py
+```
+
 ## Canonical files
 
 - `data/raw/idhea_primary_eye_care.html`
@@ -50,3 +59,4 @@ uv run pytest
 - Do not claim iDHEA determines full eligibility; say `anatomy-first pre-screening` or `feasibility support`.
 - Keep outputs under `outputs/` and canonical data under `data/`.
 - If a count changes, trace it back to the canonical JSON/CSV layers instead of patching presentation assets by hand.
+- The deterministic extractor is the baseline, not the ceiling. If `TRIAL_MATCHING_EXTRACTOR_MODE` is set to `llm` or `hybrid`, treat the scripts as the orchestration layer around evidence-backed LLM reasoning, not as a regex-only system.

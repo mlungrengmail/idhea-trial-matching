@@ -10,7 +10,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "sex",
@@ -23,7 +23,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "date_of_birth",
@@ -36,7 +36,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "eye",
@@ -49,7 +49,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "capture_date",
@@ -62,7 +62,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "capture_time",
@@ -75,7 +75,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "age",
@@ -88,7 +88,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "data_no",
@@ -101,7 +101,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "scan_size",
@@ -114,7 +114,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "scan_resolution",
@@ -127,7 +127,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "fixation",
@@ -140,7 +140,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "topq_image_quality",
@@ -153,7 +153,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "oct_focus_mode",
@@ -166,7 +166,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "model_name",
@@ -179,7 +179,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "disc_center_position_x",
@@ -192,7 +192,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "disc_center_position_y",
@@ -205,7 +205,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "fovea_position_x",
@@ -218,7 +218,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "fovea_position_y",
@@ -231,7 +231,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "tsnit_circle",
@@ -244,7 +244,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "disc_topography",
@@ -257,7 +257,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "etdrs_grid",
@@ -270,7 +270,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "6_sector_grid",
@@ -283,7 +283,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "superpixel_grid_200",
@@ -296,7 +296,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "superpixel_grid_600",
@@ -309,7 +309,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "superpixel_wide_200",
@@ -322,7 +322,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "superpixel_1000",
@@ -335,7 +335,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "disc_superpixel_grid_200",
@@ -348,7 +348,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "circular_profile",
@@ -361,7 +361,7 @@
     "source_subsection": "",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "iro",
@@ -374,7 +374,7 @@
     "source_subsection": "RETscreenAI by RetInSight (Pichelmann et al. 2025)",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "sro",
@@ -387,7 +387,7 @@
     "source_subsection": "RETscreenAI by RetInSight (Pichelmann et al. 2025)",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "ped",
@@ -400,7 +400,7 @@
     "source_subsection": "RETscreenAI by RetInSight (Pichelmann et al. 2025)",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "rpe_loss",
@@ -413,7 +413,7 @@
     "source_subsection": "RETscreenAI by RetInSight (Pichelmann et al. 2025)",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "multifactorial_oct_score",
@@ -426,7 +426,7 @@
     "source_subsection": "Multi-factorial OCT score (Fukai et al. 2022)",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "axial_length_estimate",
@@ -439,7 +439,7 @@
     "source_subsection": "Axial length estimate (Ko et al. 2024)",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "image_quality",
@@ -452,7 +452,7 @@
     "source_subsection": "AutoMorph (Zhou et al. 2022)",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "crop_information",
@@ -465,7 +465,7 @@
     "source_subsection": "AutoMorph (Zhou et al. 2022)",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "disc_features",
@@ -478,7 +478,7 @@
     "source_subsection": "AutoMorph (Zhou et al. 2022)",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "vessel_features",
@@ -491,7 +491,7 @@
     "source_subsection": "AutoMorph (Zhou et al. 2022)",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "cielab_vectors",
@@ -504,7 +504,7 @@
     "source_subsection": "Retinal Pigment Score (Rajesh et al. 2025)",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "pigmentation",
@@ -517,7 +517,7 @@
     "source_subsection": "Retinal Pigment Score (Rajesh et al. 2025)",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "oct_features",
@@ -530,7 +530,7 @@
     "source_subsection": "RETFound (Zhou et al. 2023). For academic and non-commercial research use only.",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   },
   {
     "field_name": "cfp_features",
@@ -543,6 +543,6 @@
     "source_subsection": "RETFound (Zhou et al. 2023). For academic and non-commercial research use only.",
     "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
     "page_last_updated": "October 2025",
-    "synced_at": "2026-03-12T00:26:33.544328+00:00"
+    "synced_at": "2026-03-12T01:00:12.789958+00:00"
   }
 ]
