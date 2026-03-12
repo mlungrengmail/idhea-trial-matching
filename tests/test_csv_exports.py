@@ -29,6 +29,7 @@ def test_trials_labeled_schema_matches_required_columns():
         "missing_data_fields",
         "manual_review_required",
         "prescreening_fit",
+        "gtm_priority",
     ]
 
 
@@ -75,6 +76,7 @@ def test_trials_labeled_rows_include_fit_and_missing_data_flags():
     assert rows[0]["primary_condition"] == "dme"
     assert rows[0]["missing_data_fields"] == "bcva"
     assert rows[0]["prescreening_fit"] == "medium"
+    assert rows[0]["gtm_priority"] == "now"
 
 
 def test_missing_requirements_summary_aggregates_by_dependency_condition_and_status():

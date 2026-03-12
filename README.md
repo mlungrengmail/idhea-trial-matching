@@ -9,7 +9,7 @@ This repo syncs the public iDHEA Primary Eye Care [data dictionary](https://idhe
 - `data/trials.json`
 - `data/condition_membership.json`
 - `data/trial_rule_mappings.json`
-- `data/not_evaluable_fields.json` — gap field descriptions and remediation notes
+- `data/not_evaluable_fields.json` — gap fields with acquisition tiers and remediation notes
 - `outputs/metrics.json`
 - `outputs/trials_labeled.csv`
 - `outputs/trial_rules.csv`
@@ -102,7 +102,7 @@ This fetches fresh data from ClinicalTrials.gov and prints added/removed/changed
   - `not_evaluable`: the criterion depends on data outside the public iDHEA field set.
   Rows can be produced by deterministic parsing, LLM extraction, or hybrid union; the `extraction_method`, `model_name`, `evidence_excerpt`, and `reasoning` fields keep that audit trail visible.
 - `trials_labeled.csv`
-  One row per curated trial with `prescreening_fit` and missing-data flags.
+  One row per curated trial with `prescreening_fit`, `gtm_priority`, and missing-data flags.
 
 ## Guardrails
 

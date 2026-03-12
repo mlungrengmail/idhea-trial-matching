@@ -49,7 +49,7 @@ uv run python scripts/fetch_trials.py --diff
 - `data/criterion_catalog.json`
 - `data/trial_rule_mappings.json`
 - `data/review_overrides.json`
-- `data/not_evaluable_fields.json` — gap field descriptions and remediation notes
+- `data/not_evaluable_fields.json` — gap fields with acquisition tiers and remediation notes
 - `outputs/metrics.json`
 - `outputs/trials_labeled.csv`
 - `outputs/trial_rules.csv`
