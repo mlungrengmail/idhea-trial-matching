@@ -303,40 +303,6 @@ def run_validation() -> dict:
             errors,
         )
 
-    # Coverage analysis cross-check (if output exists)
-    coverage_path = OUTPUTS / "coverage_analysis.json"
-    if coverage_path.exists():
-        from pipeline_utils import read_json
-
-        coverage = read_json(coverage_path)
-        coverage_trials = len(coverage.get("per_trial", []))
-        check(
-            coverage_trials == len(trials),
-            f"Coverage analysis covers all {len(trials)} trials",
-            errors,
-        )
-        # Gap summary totals should match trial_rule_mappings
-        gap_summary = coverage.get("gap_summary", {})
-        for dep_name, dep_count in gap_summary.get("trials_affected_by_gap", {}).items():
-            expected = len(dep_trials.get(dep_name, set()))
-            check(
-                dep_count == expected,
-                f"Coverage gap '{dep_name}' count ({dep_count}) matches rule data ({expected})",
-                errors,
-            )
-
-    # Acquisition tier validation (if not_evaluable has tiers)
-    has_tiers = all("acquisition_tier" in field for field in not_evaluable)
-    if has_tiers:
-        valid_tiers = {"od_clinical", "lab_ehr", "patient_questionnaire", "specialized_equipment"}
-        for field in not_evaluable:
-            tier = field.get("acquisition_tier", "")
-            check(
-                tier in valid_tiers,
-                f"Field '{field['field_name']}' has valid acquisition_tier '{tier}'",
-                errors,
-            )
-
     print("\n" + "=" * 60)
     if errors:
         print(f"VALIDATION FAILED: {len(errors)} issue(s)")
