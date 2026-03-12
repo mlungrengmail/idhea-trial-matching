@@ -2,8 +2,6 @@
 
 This repo syncs the public iDHEA Primary Eye Care [data dictionary](https://idhea.net/) from the public iDHEA site, fetches and curates ophthalmic trials from ClinicalTrials.gov, extracts per-trial eligibility rules, and exports analyst-friendly CSVs plus a QA workbook.
 
-It does not include internal GTM decks, narrative docs, or presentation-generation code.
-
 ## What it produces
 
 - `data/idhea_dataset_metadata.json`
