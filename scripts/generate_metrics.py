@@ -10,6 +10,7 @@ Usage:
 from __future__ import annotations
 
 import sys
+from collections import Counter
 
 try:
     from load_data import load_memberships, load_trial_rules, load_trials, trials_per_condition
@@ -41,6 +42,12 @@ def build_metrics(trials: list[dict], memberships: list[dict], rules: list[dict]
         "partial": sum(1 for row in rules if row["confidence"] == "partial"),
         "not_evaluable": sum(1 for row in rules if row["confidence"] == "not_evaluable"),
     }
+
+    # Sponsor and enrollment aggregation
+    sponsors = Counter(trial["sponsor"] for trial in trials if trial.get("sponsor"))
+    open_trials = [trial for trial in trials if is_pipeline_open(trial["status"])]
+    pipeline_enrollment = sum(trial.get("enrollment") or 0 for trial in open_trials)
+
     return {
         "generated_at": utc_now_iso(),
         "unique_trials_total": len(trials),
@@ -52,6 +59,9 @@ def build_metrics(trials: list[dict], memberships: list[dict], rules: list[dict]
         "verified_mapped_trials_total": len(verified_mapped_trials),
         "condition_counts": trials_per_condition(memberships),
         "rule_confidence_counts": confidence_counts,
+        "unique_sponsors_total": len(sponsors),
+        "pipeline_open_enrollment_total": pipeline_enrollment,
+        "top_sponsors": dict(sponsors.most_common(25)),
     }
 
 

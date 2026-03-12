@@ -459,28 +459,115 @@ def generate(
     }
 
 
+def diff_trials(new_trials: list[dict], old_path=None) -> dict:
+    """Compare newly fetched trials against existing data/trials.json.
+
+    Returns a summary of added, removed, and changed trials.
+    """
+    import json as json_mod
+
+    old_path = old_path or (DATA / "trials.json")
+    if not old_path.exists():
+        return {
+            "added": [t["nct_id"] for t in new_trials],
+            "removed": [],
+            "status_changed": [],
+            "enrollment_changed": [],
+            "old_count": 0,
+            "new_count": len(new_trials),
+        }
+
+    old_trials = json_mod.loads(old_path.read_text(encoding="utf-8"))
+    old_by_nct = {t["nct_id"]: t for t in old_trials}
+    new_by_nct = {t["nct_id"]: t for t in new_trials}
+
+    added = sorted(set(new_by_nct) - set(old_by_nct))
+    removed = sorted(set(old_by_nct) - set(new_by_nct))
+
+    status_changed = []
+    enrollment_changed = []
+    for nct_id in sorted(set(old_by_nct) & set(new_by_nct)):
+        old = old_by_nct[nct_id]
+        new = new_by_nct[nct_id]
+        if old.get("status") != new.get("status"):
+            status_changed.append({
+                "nct_id": nct_id,
+                "old_status": old.get("status"),
+                "new_status": new.get("status"),
+            })
+        old_enrollment = old.get("enrollment") or 0
+        new_enrollment = new.get("enrollment") or 0
+        if old_enrollment != new_enrollment:
+            enrollment_changed.append({
+                "nct_id": nct_id,
+                "old_enrollment": old_enrollment,
+                "new_enrollment": new_enrollment,
+            })
+
+    return {
+        "added": added,
+        "removed": removed,
+        "status_changed": status_changed,
+        "enrollment_changed": enrollment_changed,
+        "old_count": len(old_trials),
+        "new_count": len(new_trials),
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Fetch and curate ophthalmic trials")
     parser.add_argument("--recruiting-only", action="store_true", help="Fetch only open recruiting statuses")
     parser.add_argument("--page-size", type=int, default=100)
     parser.add_argument("--max-pages", type=int, default=10)
+    parser.add_argument(
+        "--diff",
+        action="store_true",
+        help="Fetch new data and compare against existing trials.json without overwriting",
+    )
     args = parser.parse_args()
 
     try:
-        summary = generate(
-            page_size=args.page_size,
-            max_pages=args.max_pages,
-            recruiting_only=args.recruiting_only,
-        )
+        if args.diff:
+            (
+                _raw_trials,
+                _raw_hits,
+                curated_trials,
+                _curated_memberships,
+                _eligibility_rows,
+                _audit_rows,
+            ) = build_outputs(args.page_size, args.max_pages, args.recruiting_only)
+            diff = diff_trials(curated_trials)
+            print("\n" + "=" * 60)
+            print("DIFF vs existing data/trials.json")
+            print("=" * 60)
+            print(f"Previous: {diff['old_count']} trials")
+            print(f"Current:  {diff['new_count']} trials")
+            print(f"Added:    {len(diff['added'])}")
+            for nct_id in diff["added"][:20]:
+                print(f"  + {nct_id}")
+            print(f"Removed:  {len(diff['removed'])}")
+            for nct_id in diff["removed"][:20]:
+                print(f"  - {nct_id}")
+            print(f"Status changed: {len(diff['status_changed'])}")
+            for item in diff["status_changed"][:20]:
+                print(f"  ~ {item['nct_id']}: {item['old_status']} -> {item['new_status']}")
+            print(f"Enrollment changed: {len(diff['enrollment_changed'])}")
+            for item in diff["enrollment_changed"][:10]:
+                print(f"  ~ {item['nct_id']}: {item['old_enrollment']} -> {item['new_enrollment']}")
+        else:
+            summary = generate(
+                page_size=args.page_size,
+                max_pages=args.max_pages,
+                recruiting_only=args.recruiting_only,
+            )
+            print("\n" + "=" * 60)
+            print("SUMMARY")
+            print("=" * 60)
+            for key, value in summary.items():
+                print(f"{key:20s} {value:>6d}")
     except Exception as exc:  # pragma: no cover - CLI path
         print(f"ERROR: {exc}", file=sys.stderr)
         sys.exit(1)
-
-    print("\n" + "=" * 60)
-    print("SUMMARY")
-    print("=" * 60)
-    for key, value in summary.items():
-        print(f"{key:20s} {value:>6d}")
 
 
 if __name__ == "__main__":

@@ -33,7 +33,7 @@ try:
         load_trial_rules,
         load_trials,
     )
-    from pipeline_utils import KNOWN_NOISY_NCTS, OUTPUTS
+    from pipeline_utils import KNOWN_NOISY_NCTS, MAPPED_CATEGORY_COUNT, SEED_CONDITION_COUNT, OUTPUTS
 except ModuleNotFoundError:  # pragma: no cover - package import path
     from scripts.export_csv import (
         TRIALS_LABELED_COLUMNS,
@@ -58,7 +58,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import path
         load_trial_rules,
         load_trials,
     )
-    from scripts.pipeline_utils import KNOWN_NOISY_NCTS, OUTPUTS
+    from scripts.pipeline_utils import KNOWN_NOISY_NCTS, MAPPED_CATEGORY_COUNT, SEED_CONDITION_COUNT, OUTPUTS
 
 PASS = "OK"
 FAIL = "FAIL"
@@ -277,6 +277,65 @@ def run_validation() -> dict:
         }
         for label, value in expected_summary_pairs.items():
             check(summary_map.get(label) == value, f"Workbook summary matches {label}", errors)
+
+    print("\n[7] Cross-artifact consistency...")
+    # Condition category count must match MAPPED_CATEGORY_COUNT
+    unique_conditions = {row["condition_category"] for row in memberships}
+    check(
+        len(unique_conditions) == MAPPED_CATEGORY_COUNT,
+        f"Condition categories ({len(unique_conditions)}) matches MAPPED_CATEGORY_COUNT ({MAPPED_CATEGORY_COUNT})",
+        errors,
+    )
+
+    # Gap counts: no summary/total row should be counted as a trial
+    # Each gap dependency should count unique trials only
+    from collections import defaultdict
+
+    dep_trials: dict[str, set[str]] = defaultdict(set)
+    for rule in rules:
+        if rule["confidence"] == "not_evaluable":
+            for dep in rule.get("external_dependencies", []):
+                dep_trials[dep].add(rule["nct_id"])
+    for dep, trial_set in dep_trials.items():
+        check(
+            all(nct_id.startswith("NCT") for nct_id in trial_set),
+            f"Gap '{dep}' has only valid NCT IDs (no summary rows counted)",
+            errors,
+        )
+
+    # Coverage analysis cross-check (if output exists)
+    coverage_path = OUTPUTS / "coverage_analysis.json"
+    if coverage_path.exists():
+        from pipeline_utils import read_json
+
+        coverage = read_json(coverage_path)
+        coverage_trials = len(coverage.get("per_trial", []))
+        check(
+            coverage_trials == len(trials),
+            f"Coverage analysis covers all {len(trials)} trials",
+            errors,
+        )
+        # Gap summary totals should match trial_rule_mappings
+        gap_summary = coverage.get("gap_summary", {})
+        for dep_name, dep_count in gap_summary.get("trials_affected_by_gap", {}).items():
+            expected = len(dep_trials.get(dep_name, set()))
+            check(
+                dep_count == expected,
+                f"Coverage gap '{dep_name}' count ({dep_count}) matches rule data ({expected})",
+                errors,
+            )
+
+    # Acquisition tier validation (if not_evaluable has tiers)
+    has_tiers = all("acquisition_tier" in field for field in not_evaluable)
+    if has_tiers:
+        valid_tiers = {"od_clinical", "lab_ehr", "patient_questionnaire", "specialized_equipment"}
+        for field in not_evaluable:
+            tier = field.get("acquisition_tier", "")
+            check(
+                tier in valid_tiers,
+                f"Field '{field['field_name']}' has valid acquisition_tier '{tier}'",
+                errors,
+            )
 
     print("\n" + "=" * 60)
     if errors:

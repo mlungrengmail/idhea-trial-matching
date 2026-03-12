@@ -19,7 +19,7 @@ import sys
 
 try:
     from extract_trial_rules import build_trial_rules as build_deterministic_trial_rules
-    from llm_client import OpenAICompatibleLLMClient, load_llm_config_from_env
+    from llm_client import create_llm_client, load_llm_config_from_env
     from load_data import (
         load_criterion_catalog,
         load_eligibility_text,
@@ -29,7 +29,7 @@ try:
     from pipeline_utils import normalize_space, slugify, write_json, DATA
 except ModuleNotFoundError:  # pragma: no cover - package import path
     from scripts.extract_trial_rules import build_trial_rules as build_deterministic_trial_rules
-    from scripts.llm_client import OpenAICompatibleLLMClient, load_llm_config_from_env
+    from scripts.llm_client import create_llm_client, load_llm_config_from_env
     from scripts.load_data import (
         load_criterion_catalog,
         load_eligibility_text,
@@ -248,7 +248,7 @@ def generate(mode: str = "hybrid") -> list[dict]:
         raise ValueError(
             "LLM extraction requires TRIAL_MATCHING_LLM_API_KEY and TRIAL_MATCHING_LLM_MODEL."
         )
-    llm_client = OpenAICompatibleLLMClient(config)
+    llm_client = create_llm_client(config)
     trials = load_trials()
     memberships = load_memberships()
     eligibility_rows = load_eligibility_text()
