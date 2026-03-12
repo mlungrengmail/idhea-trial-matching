@@ -29,5 +29,6 @@ data/raw/
 .claude/
 PLAN.md
 _gen_*.py
+_verify.py
 scripts/generate_gtm_deck.py
 scripts/generate_gtm_readout.py
