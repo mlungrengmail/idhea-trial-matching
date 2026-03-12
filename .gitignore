@@ -6,6 +6,8 @@ __pycache__/
 
 # Outputs (regenerable)
 outputs/*.xlsx
+outputs/*.csv
+outputs/*.json
 
 # OS
 .DS_Store
@@ -17,3 +19,6 @@ Thumbs.db
 
 # UV
 .python-version
+
+# Generated raw/data snapshots
+data/raw/

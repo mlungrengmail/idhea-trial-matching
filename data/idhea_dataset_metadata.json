@@ -1,0 +1,41 @@
+{
+  "dataset_id": 341,
+  "document_id": "cc9a1mte6cwitcj5yv1mfze0",
+  "dataset_title": "Primary Eye Care",
+  "dataset_slug": "primaryeyecare",
+  "source_url": "https://idhea.net/en/dataset/primaryeyecare/data-dictionary#dataDictionary",
+  "api_source_url": "https://api.idhea.net/api/datasets",
+  "page_last_updated": "October 2025",
+  "api_last_updated": "2025-10-03",
+  "published": "2025-03-01",
+  "update_info": "Additional subjects and new labels",
+  "preview_button_text": "OCT / FUNDUS",
+  "tags": [
+    "REAL-WORLD DATA",
+    "Optometry",
+    "OCT",
+    "Retinal Photo",
+    "Maestro"
+  ],
+  "content_summary": "This dataset comprises paired optical coherence tomography (OCT) and color fundus photography (CFP) of hundreds of thousands of individuals being screened and managed by optometry practices (primary eye care) located in the USA and Australia. It contains data from single screening visits as well as follow-up visits with associated demographic data such as age and sex, OCT analysis data and model-generated labels, making it valuable for development and validation of screening and monitoring algorithms.",
+  "metrics": [
+    {
+      "name": "Locations",
+      "value": "64"
+    },
+    {
+      "name": "Subjects",
+      "value": "368K"
+    },
+    {
+      "name": "Eyes",
+      "value": "734K"
+    },
+    {
+      "name": "Images",
+      "value": "1.2M"
+    }
+  ],
+  "field_count": 42,
+  "synced_at": "2026-03-12T00:26:33.544328+00:00"
+}

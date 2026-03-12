@@ -1,0 +1,26 @@
+[
+  {
+    "nct_id": "NCT01997255",
+    "condition_category": "glaucoma",
+    "action": "exclude",
+    "corrected_conditions": [],
+    "reason": "Study focuses on epilepsy in children with Sturge-Weber syndrome and should not count toward the glaucoma corpus.",
+    "source": "manual_review"
+  },
+  {
+    "nct_id": "NCT05753189",
+    "condition_category": "pathologic_myopia",
+    "action": "exclude",
+    "corrected_conditions": [],
+    "reason": "Presbyopia study matched a broad myopia query but is out of scope for pathological myopia.",
+    "source": "manual_review"
+  },
+  {
+    "nct_id": "NCT06045299",
+    "condition_category": "pathologic_myopia",
+    "action": "exclude",
+    "corrected_conditions": [],
+    "reason": "Presbyopia study matched a broad myopia query but is out of scope for pathological myopia.",
+    "source": "manual_review"
+  }
+]

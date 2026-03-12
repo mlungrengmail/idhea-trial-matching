@@ -1,153 +1,300 @@
-"""Validate consistency across data sources and outputs.
+"""Validate canonical data, CSV exports, and workbook outputs."""
 
-Checks:
-  1. trials.json NCT IDs are unique
-  2. condition_membership.json references only valid NCT IDs
-  3. Unique trial count != sum of condition counts (overlap expected)
-  4. All criteria map to valid iDHEA fields or external deps
-  5. Confidence labels are valid
-  6. Output files exist and contain expected counts
-  7. UTF-8 encoding is clean (no mojibake)
+from __future__ import annotations
 
-Usage: uv run python scripts/validate.py
-"""
-
-import json
 import sys
-from pathlib import Path
-from collections import Counter
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+try:
+    from openpyxl import load_workbook
+except ImportError as exc:  # pragma: no cover - dependency guard
+    raise SystemExit(f"Missing dependency: {exc}. Run: uv sync")
 
-from load_data import (
-    load_trials, load_memberships, load_fields, load_criteria,
-    load_not_evaluable, unique_trial_count, trials_per_condition,
-    OUTPUTS, DATA,
-)
+try:
+    from export_csv import (
+        TRIALS_LABELED_COLUMNS,
+        build_curation_audit_rows,
+        build_missing_requirements_rows,
+        build_trial_rules_rows,
+        build_trials_labeled_rows,
+        summarize_rules_by_trial,
+    )
+    from generate_metrics import build_metrics
+    from load_data import (
+        load_condition_hits,
+        load_criterion_catalog,
+        load_csv_output,
+        load_dataset_metadata,
+        load_fields,
+        load_memberships,
+        load_metrics,
+        load_not_evaluable,
+        load_raw_trials,
+        load_review_overrides,
+        load_trial_rules,
+        load_trials,
+    )
+    from pipeline_utils import KNOWN_NOISY_NCTS, OUTPUTS
+except ModuleNotFoundError:  # pragma: no cover - package import path
+    from scripts.export_csv import (
+        TRIALS_LABELED_COLUMNS,
+        build_curation_audit_rows,
+        build_missing_requirements_rows,
+        build_trial_rules_rows,
+        build_trials_labeled_rows,
+        summarize_rules_by_trial,
+    )
+    from scripts.generate_metrics import build_metrics
+    from scripts.load_data import (
+        load_condition_hits,
+        load_criterion_catalog,
+        load_csv_output,
+        load_dataset_metadata,
+        load_fields,
+        load_memberships,
+        load_metrics,
+        load_not_evaluable,
+        load_raw_trials,
+        load_review_overrides,
+        load_trial_rules,
+        load_trials,
+    )
+    from scripts.pipeline_utils import KNOWN_NOISY_NCTS, OUTPUTS
 
-VALID_CONFIDENCE = {"direct", "partial", "not_evaluable"}
 PASS = "OK"
 FAIL = "FAIL"
-errors = []
 
 
-def check(condition: bool, msg: str):
+def check(condition: bool, message: str, errors: list[str]) -> None:
     if condition:
-        print(f"  {PASS} {msg}")
+        print(f"  {PASS} {message}")
     else:
-        print(f"  {FAIL} {msg}")
-        errors.append(msg)
+        print(f"  {FAIL} {message}")
+        errors.append(message)
 
 
-def main():
+def stringify_row(row: dict, columns: list[str]) -> dict[str, str]:
+    result: dict[str, str] = {}
+    for column in columns:
+        value = row.get(column, "")
+        if value is None:
+            result[column] = ""
+        else:
+            result[column] = str(value)
+    return result
+
+
+def workbook_summary_map(path) -> dict[str, str]:
+    wb = load_workbook(path, read_only=True, data_only=True)
+    ws = wb["Summary"]
+    values: dict[str, str] = {}
+    for row in ws.iter_rows(min_row=2, values_only=True):
+        key = row[0]
+        value = row[1] if len(row) > 1 else ""
+        if key:
+            values[str(key)] = "" if value is None else str(value)
+    return values
+
+
+def run_validation() -> dict:
+    errors: list[str] = []
     print("=" * 60)
-    print("Validating data consistency")
+    print("Validating pipeline outputs")
     print("=" * 60)
 
-    # ── Load data ──
-    print("\n[1] Loading data files...")
-    try:
-        trials = load_trials()
-        memberships = load_memberships()
-        fields = load_fields()
-        criteria = load_criteria()
-        not_eval = load_not_evaluable()
-        check(True, f"All data files loaded successfully")
-    except FileNotFoundError as e:
-        check(False, f"Missing data file: {e}")
-        print("\nRun: uv run python scripts/fetch_trials.py")
-        sys.exit(1)
+    print("\n[1] Loading artifacts...")
+    trials = load_trials()
+    raw_trials = load_raw_trials()
+    raw_hits = load_condition_hits()
+    memberships = load_memberships()
+    fields = load_fields()
+    dataset = load_dataset_metadata()
+    catalog = load_criterion_catalog()
+    rules = load_trial_rules()
+    overrides = load_review_overrides()
+    not_evaluable = load_not_evaluable()
+    metrics = load_metrics()
+    trials_labeled = load_csv_output("trials_labeled.csv")
+    trial_rules_csv = load_csv_output("trial_rules.csv")
+    missing_by_trial_csv = load_csv_output("missing_requirements_by_trial.csv")
+    missing_summary_csv = load_csv_output("missing_requirements_summary.csv")
+    curation_audit_csv = load_csv_output("curation_audit.csv")
+    check(True, "All canonical JSON and CSV outputs loaded", errors)
 
-    # ── Trial uniqueness ──
-    print("\n[2] Trial uniqueness...")
-    nct_ids = [t["nct_id"] for t in trials]
-    unique_ncts = set(nct_ids)
-    check(len(nct_ids) == len(unique_ncts),
-          f"NCT IDs are unique ({len(unique_ncts)} unique / {len(nct_ids)} total)")
+    print("\n[2] iDHEA sync outputs...")
+    for required_key in [
+        "dataset_title",
+        "dataset_slug",
+        "source_url",
+        "page_last_updated",
+        "synced_at",
+        "metrics",
+        "field_count",
+    ]:
+        check(bool(dataset.get(required_key)), f"Dataset metadata includes {required_key}", errors)
+    for row in fields[:5]:
+        for provenance_key in ["source_url", "source_section", "page_last_updated", "synced_at"]:
+            check(bool(row.get(provenance_key)), f"Field {row['field_name']} includes {provenance_key}", errors)
 
-    # Check for empty NCT IDs
-    check(all(nct_ids), "No empty NCT IDs")
+    print("\n[3] Referential integrity...")
+    trial_ids = {trial["nct_id"] for trial in trials}
+    catalog_ids = {row["criterion_id"] for row in catalog}
+    membership_orphans = [row for row in memberships if row["nct_id"] not in trial_ids]
+    check(not membership_orphans, "All memberships reference curated trials", errors)
+    rule_orphans = [row for row in rules if row["nct_id"] not in trial_ids]
+    check(not rule_orphans, "All trial rules reference curated trials", errors)
+    bad_criterion_refs = [row for row in rules if row["criterion_id"] not in catalog_ids]
+    check(not bad_criterion_refs, "All trial rules reference criterion catalog IDs", errors)
+    leaked_noisy = [row for row in memberships if row["nct_id"] in KNOWN_NOISY_NCTS]
+    check(not leaked_noisy, "Known noisy trials are excluded from curated memberships", errors)
 
-    # ── Condition membership referential integrity ──
-    print("\n[3] Condition membership integrity...")
-    membership_ncts = {m["nct_id"] for m in memberships}
-    orphan_ncts = membership_ncts - unique_ncts
-    check(len(orphan_ncts) == 0,
-          f"All membership NCT IDs exist in trials.json "
-          f"({len(orphan_ncts)} orphans)" if orphan_ncts
-          else "All membership NCT IDs exist in trials.json")
+    print("\n[4] Metrics regeneration...")
+    regenerated_metrics = build_metrics(trials, memberships, rules)
+    for key in [
+        "unique_trials_total",
+        "condition_memberships_total",
+        "recruiting_now_total",
+        "pipeline_open_total",
+        "active_total",
+        "mapped_trials_total",
+        "verified_mapped_trials_total",
+    ]:
+        check(
+            regenerated_metrics[key] == metrics.get(key),
+            f"metrics.json {key} matches regenerated value",
+            errors,
+        )
 
-    # ── Count consistency ──
-    print("\n[4] Count consistency...")
-    n_unique = unique_trial_count(trials)
-    cond_counts = trials_per_condition(memberships)
-    sum_cond = sum(cond_counts.values())
-    check(sum_cond >= n_unique,
-          f"Condition sum ({sum_cond}) >= unique trials ({n_unique}) "
-          f"(overlap expected)")
-    check(sum_cond != n_unique or len(cond_counts) == 1,
-          f"Condition sum ({sum_cond}) != unique trials ({n_unique}) confirms overlaps"
-          if sum_cond != n_unique else
-          f"Only 1 condition, so sum == unique is expected")
-
-    # ── Criteria mapping validation ──
-    print("\n[5] Criteria mapping...")
-    field_names = {f["field_name"] for f in fields}
-    for c in criteria:
-        conf = c.get("confidence", "")
-        check(conf in VALID_CONFIDENCE,
-              f"Criterion '{c['criterion_id']}' confidence '{conf}' is valid")
-        for fname in c.get("idhea_fields", []):
-            check(fname in field_names,
-                  f"Criterion '{c['criterion_id']}' field '{fname}' exists in catalog")
-
-    # ── Field catalog validation ──
-    print("\n[6] Field catalog...")
-    for f in fields:
-        conf = f.get("confidence_for_prescreening", "")
-        check(conf in VALID_CONFIDENCE,
-              f"Field '{f['field_name']}' confidence '{conf}' is valid")
-
-    # ── UTF-8 encoding check ──
-    print("\n[7] UTF-8 encoding...")
-    # Only check for the Unicode replacement character (U+FFFD), which is the
-    # definitive sign of a decode error.  Earlier versions also flagged
-    # \u00e2\u0080 (the byte sequence for em-dash / smart-quote starters), but
-    # that triggers false positives on eligibility_text.json which contains
-    # legitimate Unicode from ClinicalTrials.gov.
-    for json_file in DATA.glob("*.json"):
-        try:
-            text = json_file.read_text(encoding="utf-8")
-            has_replacement_char = "\ufffd" in text
-            check(not has_replacement_char, f"{json_file.name}: clean UTF-8")
-        except UnicodeDecodeError:
-            check(False, f"{json_file.name}: UTF-8 decode error")
-
-    # ── Output existence ──
-    print("\n[8] Output files...")
-    expected_outputs = [
-        "trial_prescreening_qa.xlsx",
+    print("\n[5] CSV determinism...")
+    known_missing_fields = {row["field_name"] for row in not_evaluable}
+    rule_summaries = summarize_rules_by_trial(rules, known_missing_fields)
+    expected_trials_labeled = [
+        stringify_row(row, TRIALS_LABELED_COLUMNS)
+        for row in build_trials_labeled_rows(trials, memberships, rule_summaries)
     ]
-    for fname in expected_outputs:
-        path = OUTPUTS / fname
-        check(path.exists(), f"{fname} exists ({path.stat().st_size:,} bytes)"
-              if path.exists() else f"{fname} MISSING")
+    check(expected_trials_labeled == trials_labeled, "trials_labeled.csv is deterministic", errors)
 
-    # ── Summary ──
+    trial_lookup = {trial["nct_id"]: trial for trial in trials}
+    expected_trial_rules = [
+        stringify_row(
+            row,
+            [
+                "mapping_id",
+                "nct_id",
+                "title",
+                "status",
+                "condition_category",
+                "criterion_id",
+                "criterion_type",
+                "criterion_text_original",
+                "operator",
+                "value",
+                "unit",
+                "idhea_fields",
+                "external_dependencies",
+                "confidence",
+                "manual_review_required",
+                "human_verified",
+                "evidence_url",
+            ],
+        )
+        for row in build_trial_rules_rows(rules, trial_lookup)
+    ]
+    check(expected_trial_rules == trial_rules_csv, "trial_rules.csv is deterministic", errors)
+
+    expected_missing_by_trial, expected_missing_summary = build_missing_requirements_rows(
+        rules, trial_lookup, memberships
+    )
+    expected_missing_by_trial_rows = [
+        stringify_row(
+            row,
+            [
+                "nct_id",
+                "title",
+                "status",
+                "primary_condition",
+                "condition_category",
+                "missing_dependency",
+                "source_rule_ids",
+                "source_url",
+            ],
+        )
+        for row in expected_missing_by_trial
+    ]
+    expected_missing_summary_rows = [
+        stringify_row(row, ["missing_dependency", "condition_category", "status", "trial_count"])
+        for row in expected_missing_summary
+    ]
+    check(
+        expected_missing_by_trial_rows == missing_by_trial_csv,
+        "missing_requirements_by_trial.csv is deterministic",
+        errors,
+    )
+    check(
+        expected_missing_summary_rows == missing_summary_csv,
+        "missing_requirements_summary.csv is deterministic",
+        errors,
+    )
+    expected_audit_rows = [
+        stringify_row(
+            row,
+            [
+                "nct_id",
+                "condition_category",
+                "condition_label",
+                "condition_query",
+                "title",
+                "status",
+                "source_url",
+                "decision",
+                "reason",
+                "override_source",
+                "corrected_conditions",
+            ],
+        )
+        for row in build_curation_audit_rows(raw_hits, memberships, overrides)
+    ]
+    check(expected_audit_rows == curation_audit_csv, "curation_audit.csv is deterministic", errors)
+
+    print("\n[6] Workbook summary...")
+    workbook_path = OUTPUTS / "trial_prescreening_qa.xlsx"
+    check(workbook_path.exists(), "Workbook exists", errors)
+    if workbook_path.exists():
+        summary_map = workbook_summary_map(workbook_path)
+        expected_summary_pairs = {
+            "Unique trials total": str(metrics["unique_trials_total"]),
+            "Condition memberships total": str(metrics["condition_memberships_total"]),
+            "Recruiting now (RECRUITING only)": str(metrics["recruiting_now_total"]),
+            "Pipeline open (RECRUITING + NOT_YET_RECRUITING + ENROLLING_BY_INVITATION)": str(
+                metrics["pipeline_open_total"]
+            ),
+            "Active total": str(metrics["active_total"]),
+            "Mapped trials total": str(metrics["mapped_trials_total"]),
+            "Verified mapped trials total": str(metrics["verified_mapped_trials_total"]),
+        }
+        for label, value in expected_summary_pairs.items():
+            check(summary_map.get(label) == value, f"Workbook summary matches {label}", errors)
+
     print("\n" + "=" * 60)
     if errors:
-        print(f"VALIDATION FAILED: {len(errors)} error(s)")
-        for e in errors:
-            print(f"  - {e}")
-        sys.exit(1)
-    else:
-        print("VALIDATION PASSED: all checks OK")
-        print(f"\n  Unique trials:     {n_unique}")
-        print(f"  Cond memberships:  {sum_cond}")
-        print(f"  iDHEA fields:      {len(fields)}")
-        print(f"  Criteria mapped:   {len(criteria)}")
-        print(f"  Data gaps:         {len(not_eval)}")
+        print(f"VALIDATION FAILED: {len(errors)} issue(s)")
+        for issue in errors:
+            print(f"  - {issue}")
+        raise SystemExit(1)
+
+    print("VALIDATION PASSED")
+    return {
+        "trials": len(trials),
+        "memberships": len(memberships),
+        "rules": len(rules),
+        "fields": len(fields),
+        "raw_trials": len(raw_trials),
+    }
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        result = run_validation()
+        print(result)
+    except Exception as exc:  # pragma: no cover - CLI path
+        print(f"ERROR: {exc}", file=sys.stderr)
+        sys.exit(1)

@@ -1,51 +1,75 @@
-# iDHEA Clinical Trial Pre-Screening Pipeline
+# iDHEA Trial Matching Pipeline
 
-Maps the [iDHEA Primary Eye Care dataset](https://idhea.net/en/dataset/primaryeyecare/data-dictionary) against Phase II/III ophthalmic clinical trials to identify which eligibility criteria can be pre-screened from existing imaging data.
+This repo syncs the public iDHEA Primary Eye Care data dictionary, fetches and curates ophthalmic trials from ClinicalTrials.gov, extracts per-trial eligibility rules, and exports analyst-friendly CSVs plus a QA workbook.
 
-## What this does
+## What it produces
 
-1. **Fetches** trial data from ClinicalTrials.gov (Phase II/III, 11 ophthalmic conditions)
-2. **Maps** trial eligibility criteria against iDHEA data fields with `direct`, `partial`, or `not_evaluable` confidence labels
-3. **Generates** a QA workbook (`.xlsx`) from a single structured evidence base — unique counts, overlaps, caveats, spot-check status
+- `data/idhea_dataset_metadata.json`
+- `data/idhea_fields.json`
+- `data/trials.json`
+- `data/condition_membership.json`
+- `data/trial_rule_mappings.json`
+- `outputs/metrics.json`
+- `outputs/trials_labeled.csv`
+- `outputs/trial_rules.csv`
+- `outputs/missing_requirements_by_trial.csv`
+- `outputs/missing_requirements_summary.csv`
+- `outputs/curation_audit.csv`
+- `outputs/trial_prescreening_qa.xlsx`
 
 ## Quick start
 
 ```bash
-# Install
 uv sync
-
-# Fetch trials from ClinicalTrials.gov (populates data/)
-uv run python scripts/fetch_trials.py
-
-# Generate QA workbook
 uv run python scripts/generate_all.py
+```
 
-# Validate consistency across data and outputs
+Or run the pipeline in stages:
+
+```bash
+uv run python scripts/fetch_idhea_metadata.py
+uv run python scripts/fetch_trials.py
+uv run python scripts/extract_trial_rules.py
+uv run python scripts/generate_metrics.py
+uv run python scripts/export_csv.py
+uv run python scripts/generate_xlsx.py
 uv run python scripts/validate.py
 ```
 
-## Repo structure
+## Data flow
 
-```
-data/
-  idhea_fields.json           # iDHEA field catalog (field_name, modality, definition, direct_use, limitations)
-  trials.json                 # Trial inventory (nct_id, title, phase, status, sponsor, source_url, last_verified_at)
-  condition_membership.json   # Many-to-many trial-condition mapping (nct_id, condition)
-  criteria_mappings.json      # Per-trial criteria mapping (nct_id, criterion_text, criterion_type, idhea_fields, ...)
+1. `fetch_idhea_metadata.py`
+   Scrapes the public iDHEA Primary Eye Care data dictionary HTML and normalizes dataset metadata plus field definitions.
+2. `fetch_trials.py`
+   Fetches raw ClinicalTrials.gov hits, saves raw snapshots, applies deterministic condition filtering, and writes curated trial outputs.
+3. `extract_trial_rules.py`
+   Builds `NCT x criterion` rule mappings from eligibility text.
+4. `generate_metrics.py`
+   Freezes canonical counts used everywhere else.
+5. `export_csv.py`
+   Produces the main GTM-friendly trial CSV plus audit/supporting CSVs.
+6. `generate_xlsx.py`
+   Builds a workbook that mirrors the canonical CSV and JSON outputs.
+7. `validate.py`
+   Regenerates key derived views and checks for drift, referential integrity, and noisy-trial regressions.
 
-scripts/
-  fetch_trials.py             # Pull trials from ClinicalTrials.gov API
-  generate_all.py             # Generate QA workbook
-  generate_xlsx.py            # QA workbook generator
-  validate.py                 # Consistency checks
+## Output semantics
 
-outputs/                      # Generated artifacts (gitignored)
-```
+- `trials.json`
+  Curated unique trial table, one row per NCT ID.
+- `condition_membership.json`
+  Curated many-to-many condition table. Counts here can exceed unique trials.
+- `trial_rule_mappings.json`
+  Per-trial rule rows with confidence labels:
+  - `direct`: iDHEA has a directly relevant field for anatomy-first pre-screening.
+  - `partial`: iDHEA has a useful proxy but not a protocol-complete measure.
+  - `not_evaluable`: the criterion depends on data outside the public iDHEA field set.
+- `trials_labeled.csv`
+  One row per curated trial with GTM-oriented labels such as `prescreening_fit`, `gtm_priority`, and missing-data flags.
 
-## Key design decisions
+## Guardrails
 
-- **One evidence base, one view.** Every number in the workbook resolves to a row in `data/`. No hand-typed stats.
-- **Unique trials vs condition memberships.** `trials.json` has one row per NCT ID. `condition_membership.json` has one row per trial-condition pair. Totals are never conflated.
-- **Three confidence levels.** Each criterion mapping is labeled `direct` (iDHEA field maps to criterion with no external data), `partial` (suggestive but not definitive), or `not_evaluable` (requires clinical data outside iDHEA).
-- **Pre-screening, not eligibility determination.** iDHEA data can pre-screen for anatomical criteria. It cannot determine full eligibility alone.
-- **Embeddings are future work.** RETFound and other model embeddings are positioned as classifier inputs pending validation, not current pre-screening features.
+- Treat this as `anatomy-first pre-screening` and `feasibility support`, not full eligibility determination.
+- Use `unique_trials_total` and `condition_memberships_total` separately; do not conflate them.
+- The public iDHEA website is the source of truth for dataset metadata and field dictionary in this repo.
+- ClinicalTrials.gov is the source of truth for trial metadata and eligibility text.

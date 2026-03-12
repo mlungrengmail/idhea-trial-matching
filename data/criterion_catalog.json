@@ -1,0 +1,192 @@
+[
+  {
+    "criterion_id": "age_range",
+    "label": "Age range",
+    "description": "Age minimum/maximum requirement.",
+    "criterion_type": "demographic",
+    "applicable_conditions": ["dme", "dr", "wet_amd", "ga", "glaucoma", "rvo", "pathologic_myopia", "macular_hole", "uveitic_me", "stargardt", "vma"],
+    "idhea_fields": ["age"],
+    "external_dependencies": [],
+    "default_confidence": "direct"
+  },
+  {
+    "criterion_id": "sex_specific",
+    "label": "Sex-specific enrollment",
+    "description": "Sex-limited enrollment or sex-specific reproductive requirements.",
+    "criterion_type": "demographic",
+    "applicable_conditions": ["dme", "dr", "wet_amd", "ga", "glaucoma", "rvo", "pathologic_myopia", "macular_hole", "uveitic_me", "stargardt", "vma"],
+    "idhea_fields": ["sex"],
+    "external_dependencies": [],
+    "default_confidence": "direct"
+  },
+  {
+    "criterion_id": "bcva_range",
+    "label": "BCVA range",
+    "description": "Best-corrected visual acuity threshold or ETDRS letter score.",
+    "criterion_type": "functional",
+    "applicable_conditions": ["dme", "dr", "wet_amd", "ga", "rvo", "pathologic_myopia", "macular_hole", "uveitic_me", "stargardt", "vma"],
+    "idhea_fields": [],
+    "external_dependencies": ["bcva"],
+    "default_confidence": "not_evaluable"
+  },
+  {
+    "criterion_id": "cst_threshold",
+    "label": "CST threshold",
+    "description": "Central subfield or central retinal thickness threshold on OCT.",
+    "criterion_type": "anatomy",
+    "applicable_conditions": ["dme", "wet_amd", "rvo", "uveitic_me", "vma"],
+    "idhea_fields": ["etdrs_grid"],
+    "external_dependencies": [],
+    "default_confidence": "direct"
+  },
+  {
+    "criterion_id": "intraretinal_fluid",
+    "label": "Intraretinal fluid",
+    "description": "Presence of intraretinal fluid or cysts on OCT.",
+    "criterion_type": "anatomy",
+    "applicable_conditions": ["dme", "wet_amd", "rvo", "uveitic_me"],
+    "idhea_fields": ["iro"],
+    "external_dependencies": [],
+    "default_confidence": "direct"
+  },
+  {
+    "criterion_id": "subretinal_fluid",
+    "label": "Subretinal fluid",
+    "description": "Presence of subretinal fluid on OCT.",
+    "criterion_type": "anatomy",
+    "applicable_conditions": ["dme", "wet_amd", "rvo", "pathologic_myopia"],
+    "idhea_fields": ["sro"],
+    "external_dependencies": [],
+    "default_confidence": "direct"
+  },
+  {
+    "criterion_id": "ped_presence",
+    "label": "PED presence",
+    "description": "Pigment epithelial detachment present on OCT.",
+    "criterion_type": "anatomy",
+    "applicable_conditions": ["wet_amd", "pathologic_myopia"],
+    "idhea_fields": ["ped"],
+    "external_dependencies": [],
+    "default_confidence": "direct"
+  },
+  {
+    "criterion_id": "ga_presence",
+    "label": "Geographic atrophy presence",
+    "description": "Presence of GA or RPE atrophy on imaging.",
+    "criterion_type": "anatomy",
+    "applicable_conditions": ["ga"],
+    "idhea_fields": ["rpe_loss"],
+    "external_dependencies": [],
+    "default_confidence": "partial"
+  },
+  {
+    "criterion_id": "ga_area_range",
+    "label": "GA area range",
+    "description": "Lesion area threshold for geographic atrophy.",
+    "criterion_type": "anatomy",
+    "applicable_conditions": ["ga"],
+    "idhea_fields": ["rpe_loss"],
+    "external_dependencies": ["ga_area_measurement"],
+    "default_confidence": "partial"
+  },
+  {
+    "criterion_id": "rnfl_thinning",
+    "label": "RNFL thinning",
+    "description": "RNFL thickness loss or structural glaucoma finding.",
+    "criterion_type": "anatomy",
+    "applicable_conditions": ["glaucoma"],
+    "idhea_fields": ["tsnit_circle"],
+    "external_dependencies": ["iop", "visual_field"],
+    "default_confidence": "partial"
+  },
+  {
+    "criterion_id": "gcl_thinning",
+    "label": "GCL thinning",
+    "description": "Ganglion cell layer loss or structural glaucoma finding.",
+    "criterion_type": "anatomy",
+    "applicable_conditions": ["glaucoma"],
+    "idhea_fields": ["tsnit_circle"],
+    "external_dependencies": ["iop", "visual_field"],
+    "default_confidence": "partial"
+  },
+  {
+    "criterion_id": "cd_ratio_elevated",
+    "label": "Cup-to-disc ratio",
+    "description": "Cup-to-disc ratio or optic disc cupping threshold.",
+    "criterion_type": "anatomy",
+    "applicable_conditions": ["glaucoma"],
+    "idhea_fields": ["disc_topography"],
+    "external_dependencies": ["clinical_exam"],
+    "default_confidence": "partial"
+  },
+  {
+    "criterion_id": "high_myopia_exclusion",
+    "label": "High myopia exclusion",
+    "description": "Axial length or diopter-based myopia exclusion.",
+    "criterion_type": "anatomy",
+    "applicable_conditions": ["pathologic_myopia", "wet_amd", "ga", "macular_hole", "vma"],
+    "idhea_fields": ["axial_length_estimate"],
+    "external_dependencies": ["clinical_exam"],
+    "default_confidence": "partial"
+  },
+  {
+    "criterion_id": "iop_criteria",
+    "label": "IOP criteria",
+    "description": "Intraocular pressure threshold or washout requirement.",
+    "criterion_type": "clinical",
+    "applicable_conditions": ["glaucoma"],
+    "idhea_fields": [],
+    "external_dependencies": ["iop"],
+    "default_confidence": "not_evaluable"
+  },
+  {
+    "criterion_id": "visual_field_requirement",
+    "label": "Visual field requirement",
+    "description": "Humphrey or other perimetry requirement.",
+    "criterion_type": "clinical",
+    "applicable_conditions": ["glaucoma"],
+    "idhea_fields": [],
+    "external_dependencies": ["visual_field"],
+    "default_confidence": "not_evaluable"
+  },
+  {
+    "criterion_id": "diabetes_diagnosis",
+    "label": "Diabetes diagnosis / HbA1c",
+    "description": "Diabetes confirmation or HbA1c threshold.",
+    "criterion_type": "clinical",
+    "applicable_conditions": ["dme", "dr"],
+    "idhea_fields": [],
+    "external_dependencies": ["hba1c"],
+    "default_confidence": "not_evaluable"
+  },
+  {
+    "criterion_id": "treatment_naive",
+    "label": "Treatment-naive / washout",
+    "description": "Treatment history or washout requirement.",
+    "criterion_type": "clinical",
+    "applicable_conditions": ["dme", "dr", "wet_amd", "ga", "glaucoma", "rvo", "pathologic_myopia", "macular_hole", "uveitic_me", "stargardt", "vma"],
+    "idhea_fields": [],
+    "external_dependencies": ["treatment_history"],
+    "default_confidence": "not_evaluable"
+  },
+  {
+    "criterion_id": "pregnancy_exclusion",
+    "label": "Pregnancy exclusion",
+    "description": "Pregnancy, nursing, or contraception requirement.",
+    "criterion_type": "clinical",
+    "applicable_conditions": ["dme", "dr", "wet_amd", "ga", "glaucoma", "rvo", "pathologic_myopia", "macular_hole", "uveitic_me", "stargardt", "vma"],
+    "idhea_fields": [],
+    "external_dependencies": ["pregnancy_status"],
+    "default_confidence": "not_evaluable"
+  },
+  {
+    "criterion_id": "drss_severity",
+    "label": "DRSS severity",
+    "description": "DRSS or ETDRS diabetic retinopathy severity band.",
+    "criterion_type": "clinical",
+    "applicable_conditions": ["dr", "dme"],
+    "idhea_fields": [],
+    "external_dependencies": ["drss_grading"],
+    "default_confidence": "not_evaluable"
+  }
+]
