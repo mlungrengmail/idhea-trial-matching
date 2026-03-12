@@ -29,6 +29,13 @@ CONDITION_PRIORITY = [
     "vma",
 ]
 
+# Distinguish "seed query terms" (ClinicalTrials.gov search inputs)
+# from "mapped condition categories" (curated output categories).
+# These numbers diverge because condition_membership deduplication
+# and sub-condition grouping produce more categories than seeds.
+SEED_CONDITION_COUNT = 11  # len(CONDITION_SPECS) in fetch_trials.py
+MAPPED_CATEGORY_COUNT = len(CONDITION_PRIORITY)  # curated categories
+
 CONDITION_LABELS = {
     "dme": "Diabetic Macular Edema",
     "dr": "Diabetic Retinopathy",

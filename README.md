@@ -9,7 +9,10 @@ This repo syncs the public iDHEA Primary Eye Care [data dictionary](https://idhe
 - `data/trials.json`
 - `data/condition_membership.json`
 - `data/trial_rule_mappings.json`
+- `data/not_evaluable_fields.json` — gap fields with acquisition tiers
+- `data/enrichment_models.json` — AI model catalog for coverage enrichment
 - `outputs/metrics.json`
+- `outputs/coverage_analysis.json` — per-trial and aggregate coverage at each enrichment tier
 - `outputs/trials_labeled.csv`
 - `outputs/trial_rules.csv`
 - `outputs/missing_requirements_by_trial.csv`
@@ -24,16 +27,24 @@ uv sync
 uv run python scripts/generate_all.py
 ```
 
-Optional LLM-assisted extraction:
+Optional LLM-assisted extraction (requires API key in environment variable):
 
 ```bash
-$env:TRIAL_MATCHING_EXTRACTOR_MODE="hybrid"
-$env:TRIAL_MATCHING_LLM_API_KEY="..."
-$env:TRIAL_MATCHING_LLM_MODEL="gpt-4.1-mini"
+# OpenAI-compatible endpoint
+export TRIAL_MATCHING_EXTRACTOR_MODE="hybrid"
+export TRIAL_MATCHING_LLM_API_KEY="$YOUR_API_KEY"
+export TRIAL_MATCHING_LLM_MODEL="gpt-4.1-mini"
+uv run python scripts/generate_all.py
+
+# Anthropic Claude
+export TRIAL_MATCHING_EXTRACTOR_MODE="hybrid"
+export TRIAL_MATCHING_LLM_PROVIDER="anthropic"
+export TRIAL_MATCHING_LLM_API_KEY="$YOUR_API_KEY"
+export TRIAL_MATCHING_LLM_MODEL="claude-sonnet-4-20250514"
 uv run python scripts/generate_all.py
 ```
 
-The LLM path uses an OpenAI-compatible chat endpoint and keeps the rest of the pipeline unchanged. `deterministic` remains the default when no LLM settings are supplied.
+The LLM path uses either an OpenAI-compatible chat endpoint or the native Anthropic Messages API. `deterministic` remains the default when no LLM settings are supplied.
 
 Or run the pipeline in stages:
 
@@ -42,6 +53,7 @@ uv run python scripts/fetch_idhea_metadata.py
 uv run python scripts/fetch_trials.py
 uv run python scripts/extract_trial_rules.py
 uv run python scripts/generate_metrics.py
+uv run python scripts/compute_coverage.py
 uv run python scripts/export_csv.py
 uv run python scripts/generate_xlsx.py
 uv run python scripts/validate.py
@@ -52,18 +64,63 @@ uv run python scripts/validate.py
 1. `fetch_idhea_metadata.py`
    Scrapes the public iDHEA Primary Eye Care data dictionary HTML and normalizes dataset metadata plus field definitions.
 2. `fetch_trials.py`
-   Fetches raw ClinicalTrials.gov hits, saves raw snapshots, applies deterministic condition filtering, and writes curated trial outputs.
+   Fetches raw ClinicalTrials.gov hits using 11 seed condition queries, saves raw snapshots, applies deterministic condition filtering, and writes curated trial outputs. Use `--diff` to compare new data against existing `trials.json` without overwriting.
 3. `extract_trial_rules.py`
    Builds `NCT x criterion` rule mappings from eligibility text.
    `extract_trial_rules_llm.py` adds optional `llm` or `hybrid` reasoning when an API key and model are configured.
 4. `generate_metrics.py`
-   Freezes canonical counts used everywhere else.
-5. `export_csv.py`
+   Freezes canonical counts (including sponsor and enrollment aggregation) used everywhere else.
+5. `compute_coverage.py`
+   Computes per-trial and aggregate coverage at each data enrichment tier (imaging only → +AI models → +OD clinical data → +lab/EHR → +questionnaire). Uses `data/enrichment_models.json` and acquisition tier metadata from `data/not_evaluable_fields.json`.
+6. `export_csv.py`
    Produces the main GTM-friendly trial CSV plus audit/supporting CSVs.
-6. `generate_xlsx.py`
+7. `generate_xlsx.py`
    Builds a workbook that mirrors the canonical CSV and JSON outputs.
-7. `validate.py`
-   Regenerates key derived views and checks for drift, referential integrity, and noisy-trial regressions.
+8. `validate.py`
+   Regenerates key derived views and checks for drift, referential integrity, noisy-trial regressions, and cross-artifact consistency.
+
+## Condition search vs. condition categories
+
+The pipeline searches ClinicalTrials.gov using **11 seed condition queries** (DME, DR, wet AMD, GA, glaucoma, RVO, pathological myopia, macular hole, uveitic ME, Stargardt, VMA). After deduplication and sub-condition grouping, trials are mapped into **curated condition categories** defined in `CONDITION_PRIORITY` (currently 11 categories, but this number can diverge from the seed count as the taxonomy evolves).
+
+When referencing condition counts in downstream documents, always clarify whether you mean "seed queries" or "mapped categories." This distinction caused the most common cross-document inconsistency in early deliverables.
+
+## Coverage tiers and gap taxonomy
+
+Each gap field in `data/not_evaluable_fields.json` has an `acquisition_tier` that describes how the gap can be closed:
+
+| Tier | Examples | Cost |
+|------|----------|------|
+| `od_clinical` | BCVA, IOP, slit lamp, refraction, diagnosis | $30-50K/site (EHR integration) |
+| `lab_ehr` | HbA1c, eGFR, systemic history, blood pressure | Varies (hospital/lab integration) |
+| `patient_questionnaire` | Treatment history, pregnancy status | ~$0 |
+| `specialized_equipment` | Visual field perimetry, angiography, genetic testing | $15K+ or not feasible |
+
+**Key distinction:** OD clinical data (BCVA, IOP, slit lamp findings) is already collected at optometry sites as part of standard workflow — the cost is for data integration, not equipment. Lab/EHR data (HbA1c, eGFR) requires hospital or laboratory system integration and is not available at typical OD practices.
+
+## Enrichment models
+
+`data/enrichment_models.json` catalogs AI models that can address specific gap criteria at zero marginal cost (already available). The coverage analysis uses this catalog to compute the Tier 1 ("+AI models") coverage level.
+
+## Downstream analysis
+
+The pipeline outputs clean data, but business deliverables (strategic plans, manuscripts, executive decks) require additional derived metrics:
+
+- **Coverage progression** (e.g., 19.1% → 93.8%): computed by `compute_coverage.py` and written to `outputs/coverage_analysis.json`
+- **Sponsor rankings and enrollment totals**: included in `outputs/metrics.json` via `top_sponsors` and `pipeline_open_enrollment_total`
+- **Gap closure costs by tier**: derived from `acquisition_tier` and `estimated_cost_per_site` in `not_evaluable_fields.json`
+- **GTM trial selection**: `trials_labeled.csv` includes `prescreening_fit` and `gtm_priority` columns
+
+If you build downstream artifacts from these outputs, treat `outputs/metrics.json` and `outputs/coverage_analysis.json` as sources of truth. Do not hand-maintain derived numbers in presentation assets — regenerate from the pipeline.
+
+## Incremental updates
+
+```bash
+# See what changed without overwriting data
+uv run python scripts/fetch_trials.py --diff
+```
+
+This fetches fresh data from ClinicalTrials.gov and prints added/removed/changed trials compared to the existing `data/trials.json`.
 
 ## Output semantics
 
@@ -79,6 +136,8 @@ uv run python scripts/validate.py
   Rows can be produced by deterministic parsing, LLM extraction, or hybrid union; the `extraction_method`, `model_name`, `evidence_excerpt`, and `reasoning` fields keep that audit trail visible.
 - `trials_labeled.csv`
   One row per curated trial with GTM-oriented labels such as `prescreening_fit`, `gtm_priority`, and missing-data flags.
+- `coverage_analysis.json`
+  Per-trial coverage at each enrichment tier, aggregate averages, gap summary with trials-affected counts, and persistent gaps that cannot be closed at any tier.
 
 ## Guardrails
 
@@ -86,3 +145,18 @@ uv run python scripts/validate.py
 - Use `unique_trials_total` and `condition_memberships_total` separately; do not conflate them.
 - The public iDHEA website is the source of truth for dataset metadata and field dictionary in this repo.
 - ClinicalTrials.gov is the source of truth for trial metadata and eligibility text.
+- API keys are read from environment variables only — never commit secrets to the repository.
+
+## Environment variables
+
+All optional. The pipeline runs in deterministic mode with no external API calls when none are set.
+
+| Variable | Purpose |
+|----------|---------|
+| `TRIAL_MATCHING_EXTRACTOR_MODE` | `deterministic` (default), `llm`, or `hybrid` |
+| `TRIAL_MATCHING_LLM_PROVIDER` | `openai` (default) or `anthropic` |
+| `TRIAL_MATCHING_LLM_API_KEY` | API key for the selected provider |
+| `TRIAL_MATCHING_LLM_MODEL` | Model name (e.g., `gpt-4.1-mini`, `claude-sonnet-4-20250514`) |
+| `TRIAL_MATCHING_LLM_BASE_URL` | Base URL override (OpenAI provider only) |
+| `TRIAL_MATCHING_LLM_TIMEOUT_SECONDS` | Request timeout in seconds (default: 90) |
+| `TRIAL_MATCHING_LLM_MAX_TOKENS` | Max output tokens (default: 4096) |
