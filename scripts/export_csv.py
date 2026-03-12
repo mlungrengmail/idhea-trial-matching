@@ -1,4 +1,4 @@
-"""Export GTM-friendly CSV outputs from curated data."""
+"""Export analyst-friendly CSV outputs from curated data."""
 
 from __future__ import annotations
 
@@ -70,7 +70,6 @@ TRIALS_LABELED_COLUMNS = [
     "missing_data_fields",
     "manual_review_required",
     "prescreening_fit",
-    "gtm_priority",
 ]
 
 
@@ -193,14 +192,6 @@ def prescreening_fit(summary: dict) -> str:
     return "low"
 
 
-def gtm_priority(fit: str, status: str) -> str:
-    if fit in {"high", "medium"} and is_pipeline_open(status):
-        return "now"
-    if fit in {"high", "medium"}:
-        return "later"
-    return "low"
-
-
 def build_trials_labeled_rows(
     trials: list[dict],
     memberships: list[dict],
@@ -252,7 +243,6 @@ def build_trials_labeled_rows(
                 "missing_data_fields": "; ".join(summary["missing_data_fields"]),
                 "manual_review_required": summary["manual_review_required"],
                 "prescreening_fit": fit,
-                "gtm_priority": gtm_priority(fit, trial["status"]),
             }
         )
     return rows

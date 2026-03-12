@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This repo builds a trustworthy labeled ophthalmic trial dataset for feasibility work. It syncs the public iDHEA Primary Eye Care metadata, curates ClinicalTrials.gov studies, extracts per-trial rule mappings, computes enrichment-tier coverage analysis, and exports CSV/XLSX artifacts.
+This repo builds a trustworthy labeled ophthalmic trial dataset for feasibility work. It syncs the public iDHEA Primary Eye Care metadata, curates ClinicalTrials.gov studies, extracts per-trial rule mappings, and exports CSV/XLSX artifacts.
 
 ## Commands
 
@@ -49,10 +49,8 @@ uv run python scripts/fetch_trials.py --diff
 - `data/criterion_catalog.json`
 - `data/trial_rule_mappings.json`
 - `data/review_overrides.json`
-- `data/not_evaluable_fields.json` — gap fields with `acquisition_tier`
-- `data/enrichment_models.json` — AI model catalog for coverage tiers
+- `data/not_evaluable_fields.json` — gap field descriptions and remediation notes
 - `outputs/metrics.json`
-- `outputs/coverage_analysis.json` — per-trial and aggregate coverage
 - `outputs/trials_labeled.csv`
 - `outputs/trial_rules.csv`
 - `outputs/missing_requirements_by_trial.csv`
@@ -73,16 +71,6 @@ uv run python scripts/fetch_trials.py --diff
 - `pipeline_open_enrollment_total`: total enrollment across pipeline-open trials
 - `top_sponsors`: top 25 sponsors by trial count
 
-## Coverage tiers
-
-| Tier | What it adds | Cost |
-|------|-------------|------|
-| 0 | iDHEA imaging (OCT/CFP) | $0 |
-| 1 | + AI models (RetinSight, RETFound, Toku CLAiR) | $0 |
-| 2 | + OD clinical data (BCVA, IOP, slit lamp, refraction) | $30-50K/site |
-| 3 | + Lab/medical EHR (HbA1c, eGFR, systemic history) | Varies |
-| 4 | + Patient questionnaire (treatment history, pregnancy) | ~$0 |
-
 ## Guardrails
 
 - Do not call a fetched trial "mapped" unless it has per-trial rule rows.
@@ -92,4 +80,4 @@ uv run python scripts/fetch_trials.py --diff
 - The deterministic extractor is the baseline, not the ceiling. If `TRIAL_MATCHING_EXTRACTOR_MODE` is set to `llm` or `hybrid`, treat the scripts as the orchestration layer around evidence-backed LLM reasoning, not as a regex-only system.
 - **Never commit API keys or secrets.** All credentials are read from environment variables.
 - When referencing condition counts in documents, distinguish "11 seed queries" from "N mapped condition categories" (see `SEED_CONDITION_COUNT` and `MAPPED_CATEGORY_COUNT` in `pipeline_utils.py`).
-- Gap counts in downstream artifacts must match `outputs/coverage_analysis.json` — do not hand-maintain derived numbers.
+- If a count changes, trace it back to the canonical JSON/CSV layers instead of patching presentation assets by hand.

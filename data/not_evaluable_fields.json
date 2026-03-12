@@ -4,189 +4,132 @@
     "description": "Best-corrected visual acuity (ETDRS letter score)",
     "trial_prevalence": "~90% of retinal trials",
     "impact": "Cannot evaluate VA letter score ranges, which are primary inclusion criteria in most retinal trials",
-    "remediation": "Access BCVA data already recorded in OD EHR systems",
-    "acquisition_tier": "od_clinical",
-    "acquisition_note": "BCVA is a standard OD workflow measurement; cost is EHR data integration, not equipment",
-    "estimated_cost_per_site": "$30-50K (integration)"
+    "remediation": "Access BCVA data already recorded in OD EHR systems"
   },
   {
     "field_name": "iop",
     "description": "Intraocular pressure measurement",
     "trial_prevalence": "100% of glaucoma trials",
     "impact": "Cannot evaluate IOP criteria, which are required for all glaucoma trials",
-    "remediation": "Access IOP data already recorded in OD EHR systems",
-    "acquisition_tier": "od_clinical",
-    "acquisition_note": "IOP is a standard OD workflow measurement via tonometry; cost is EHR data integration",
-    "estimated_cost_per_site": "$30-50K (integration)"
+    "remediation": "Access IOP data already recorded in OD EHR systems"
   },
   {
     "field_name": "clinical_exam",
     "description": "Structured slit lamp / fundus / investigator exam findings",
     "trial_prevalence": "Common across interventional ophthalmology trials",
     "impact": "Cannot confirm investigator-assessed diagnoses, media clarity, inflammation status, or disc exam findings",
-    "remediation": "Access slit lamp exam data already recorded in OD EHR systems",
-    "acquisition_tier": "od_clinical",
-    "acquisition_note": "Slit lamp findings are standard OD workflow; cost is EHR data integration",
-    "estimated_cost_per_site": "$30-50K (integration)"
+    "remediation": "Access slit lamp exam data already recorded in OD EHR systems"
   },
   {
     "field_name": "clinical_diagnosis",
     "description": "Clinical diagnosis codes and investigator-assessed condition confirmation",
     "trial_prevalence": "~95% of interventional trials",
     "impact": "Cannot confirm clinical diagnosis which is a baseline requirement for nearly all trial enrollment",
-    "remediation": "Access ICD-10/diagnosis data already recorded in OD EHR systems",
-    "acquisition_tier": "od_clinical",
-    "acquisition_note": "ODs record clinical diagnoses as part of standard workflow; cost is EHR data integration",
-    "estimated_cost_per_site": "$30-50K (integration)"
+    "remediation": "Access ICD-10/diagnosis data already recorded in OD EHR systems"
   },
   {
     "field_name": "refraction",
     "description": "Manifest refraction / autorefraction data",
     "trial_prevalence": "~30% of trials (myopia, refractive criteria)",
     "impact": "Cannot evaluate refractive exclusion criteria or confirm myopia severity",
-    "remediation": "Access refraction data already recorded in OD EHR systems",
-    "acquisition_tier": "od_clinical",
-    "acquisition_note": "Refraction is a core OD workflow measurement; cost is EHR data integration",
-    "estimated_cost_per_site": "$30-50K (integration)"
+    "remediation": "Access refraction data already recorded in OD EHR systems"
   },
   {
     "field_name": "lens_status",
     "description": "Lens status (phakic, pseudophakic, aphakic)",
     "trial_prevalence": "~40% of retinal/glaucoma trials",
     "impact": "Cannot evaluate lens status inclusion/exclusion criteria",
-    "remediation": "Access lens status data already recorded in OD EHR systems",
-    "acquisition_tier": "od_clinical",
-    "acquisition_note": "Lens status is documented in standard OD slit lamp exam; cost is EHR data integration",
-    "estimated_cost_per_site": "$30-50K (integration)"
+    "remediation": "Access lens status data already recorded in OD EHR systems"
   },
   {
     "field_name": "hba1c",
     "description": "Glycated hemoglobin / diabetes diagnosis confirmation",
     "trial_prevalence": "100% of DME and DR trials",
     "impact": "Cannot confirm diabetes status, which is required for all DME/DR trial enrollment",
-    "remediation": "Link to hospital/lab EHR systems for lab results",
-    "acquisition_tier": "lab_ehr",
-    "acquisition_note": "HbA1c is a laboratory test not performed at OD practices; requires hospital/lab system integration",
-    "estimated_cost_per_site": "Varies (lab integration)"
+    "remediation": "Link to hospital/lab EHR systems for lab results"
   },
   {
     "field_name": "lab_values",
     "description": "General laboratory values (eGFR, liver function, CBC, metabolic panel)",
     "trial_prevalence": "~50% of interventional trials (systemic safety)",
     "impact": "Cannot evaluate systemic safety lab exclusion criteria",
-    "remediation": "Link to hospital/lab EHR systems",
-    "acquisition_tier": "lab_ehr",
-    "acquisition_note": "Lab panels are not available at OD practices; requires medical EHR / lab integration",
-    "estimated_cost_per_site": "Varies (lab integration)"
+    "remediation": "Link to hospital/lab EHR systems"
   },
   {
     "field_name": "blood_pressure",
     "description": "Blood pressure and cardiovascular history",
     "trial_prevalence": "~40% of trials (systemic exclusion)",
     "impact": "Cannot evaluate systemic cardiovascular exclusion criteria",
-    "remediation": "Link to medical EHR for vitals",
-    "acquisition_tier": "lab_ehr",
-    "acquisition_note": "Blood pressure is not typically recorded at OD practices; requires medical EHR integration",
-    "estimated_cost_per_site": "Varies (EHR integration)"
+    "remediation": "Link to medical EHR for vitals"
   },
   {
     "field_name": "systemic_history",
     "description": "Systemic medical history (comorbidities, prior systemic medications, surgical history)",
     "trial_prevalence": "~65% of interventional trials",
     "impact": "Cannot evaluate systemic comorbidity exclusions or prior medication washout criteria",
-    "remediation": "Link to medical EHR for problem list and medication history",
-    "acquisition_tier": "lab_ehr",
-    "acquisition_note": "Full systemic history not available at OD practices; requires medical EHR integration",
-    "estimated_cost_per_site": "Varies (EHR integration)"
+    "remediation": "Link to medical EHR for problem list and medication history"
   },
   {
     "field_name": "surgical_history",
     "description": "Prior ocular and systemic surgical history",
     "trial_prevalence": "~15% of trials (surgical exclusions)",
     "impact": "Cannot evaluate prior surgery exclusion criteria (e.g., prior vitrectomy, cataract surgery timing)",
-    "remediation": "Link to medical EHR for surgical records or collect via patient questionnaire",
-    "acquisition_tier": "lab_ehr",
-    "acquisition_note": "Detailed surgical records typically in hospital EHR, not OD systems",
-    "estimated_cost_per_site": "Varies (EHR integration)"
+    "remediation": "Link to medical EHR for surgical records or collect via patient questionnaire"
   },
   {
     "field_name": "treatment_history",
     "description": "Prior ophthalmic treatment history (anti-VEGF, laser, surgery)",
     "trial_prevalence": "~80% of interventional trials",
     "impact": "Cannot confirm treatment-naive status or washout period compliance",
-    "remediation": "Collect via patient questionnaire at enrollment",
-    "acquisition_tier": "patient_questionnaire",
-    "acquisition_note": "Treatment history can be collected via patient self-report questionnaire at ~$0 marginal cost",
-    "estimated_cost_per_site": "~$0"
+    "remediation": "Collect via patient questionnaire at enrollment"
   },
   {
     "field_name": "pregnancy_status",
     "description": "Pregnancy status or reproductive potential",
     "trial_prevalence": "~95% of trials (standard exclusion)",
     "impact": "Cannot evaluate pregnancy exclusion criteria",
-    "remediation": "Collect via patient questionnaire at enrollment",
-    "acquisition_tier": "patient_questionnaire",
-    "acquisition_note": "Pregnancy status collected via patient self-report; standard demographic questionnaire item",
-    "estimated_cost_per_site": "~$0"
+    "remediation": "Collect via patient questionnaire at enrollment"
   },
   {
     "field_name": "drss_grading",
     "description": "Diabetic Retinopathy Severity Scale (ETDRS grading)",
     "trial_prevalence": "~60% of DR trials",
     "impact": "Cannot grade DR severity on standard ETDRS scale",
-    "remediation": "Train validated classifier on CFP + OCT data (potential use of RETFound embeddings)",
-    "acquisition_tier": "specialized_equipment",
-    "acquisition_note": "Requires standardized grading protocol; may be partially addressable via AI models on existing images",
-    "estimated_cost_per_site": "Model development cost"
+    "remediation": "Train validated classifier on CFP + OCT data (potential use of RETFound embeddings)"
   },
   {
     "field_name": "visual_field",
     "description": "Visual field / perimetry output",
     "trial_prevalence": "Most glaucoma interventional trials",
     "impact": "Cannot evaluate visual field inclusion criteria or confirm functional glaucomatous loss",
-    "remediation": "Integrate Humphrey or equivalent perimetry feeds; ODs typically do not have perimeters",
-    "acquisition_tier": "specialized_equipment",
-    "acquisition_note": "Perimetry equipment not standard in primary OD practices; requires device acquisition + integration",
-    "estimated_cost_per_site": "$15-40K (equipment + integration)"
+    "remediation": "Integrate Humphrey or equivalent perimetry feeds; ODs typically do not have perimeters"
   },
   {
     "field_name": "fluorescein_angiography",
     "description": "Fluorescein angiography findings (leakage, ischemia, perfusion)",
     "trial_prevalence": "~25% of retinal trials",
     "impact": "Cannot evaluate FA-based criteria for CNV leakage or retinal nonperfusion",
-    "remediation": "Not feasible in primary care optometry setting",
-    "acquisition_tier": "specialized_equipment",
-    "acquisition_note": "Requires specialized imaging equipment and dye injection; not available at OD practices",
-    "estimated_cost_per_site": "Not feasible at OD sites"
+    "remediation": "Not feasible in primary care optometry setting"
   },
   {
     "field_name": "ga_area_measurement",
     "description": "Quantified geographic atrophy lesion area or reading-center equivalent measurement",
     "trial_prevalence": "Many GA interventional trials",
     "impact": "Cannot evaluate lesion-size thresholds when protocols specify minimum or maximum GA area",
-    "remediation": "Add validated lesion measurement workflow, potentially multimodal with FAF support",
-    "acquisition_tier": "specialized_equipment",
-    "acquisition_note": "Requires FAF imaging or validated measurement protocol beyond standard OCT",
-    "estimated_cost_per_site": "$20-50K (FAF equipment + integration)"
+    "remediation": "Add validated lesion measurement workflow, potentially multimodal with FAF support"
   },
   {
     "field_name": "genetic_testing",
     "description": "Genetic testing results (e.g., complement factor variants, ABCA4 mutations)",
     "trial_prevalence": "~13% of trials (gene therapy, inherited dystrophies)",
     "impact": "Cannot evaluate genetic inclusion criteria for gene therapy or targeted trials",
-    "remediation": "Biobank partnerships or central lab referral",
-    "acquisition_tier": "specialized_equipment",
-    "acquisition_note": "Requires laboratory genetic testing; 2-6 week turnaround, $200-2K per test",
-    "estimated_cost_per_site": "$200-2K per test"
+    "remediation": "Biobank partnerships or central lab referral"
   },
   {
     "field_name": "electrophysiology",
     "description": "Electroretinography (ERG) and electrophysiology testing",
     "trial_prevalence": "~5% of trials (inherited retinal diseases)",
     "impact": "Cannot evaluate ERG-based inclusion criteria for retinal dystrophy trials",
-    "remediation": "Specialized referral center testing",
-    "acquisition_tier": "specialized_equipment",
-    "acquisition_note": "Requires specialized electrophysiology equipment not available at OD practices",
-    "estimated_cost_per_site": "Not feasible at OD sites"
+    "remediation": "Specialized referral center testing"
   }
 ]

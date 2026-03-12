@@ -6,7 +6,6 @@ import os
 import sys
 
 try:
-    from compute_coverage import generate as compute_coverage
     from export_csv import generate as export_csv
     from extract_trial_rules import generate as extract_trial_rules
     from extract_trial_rules_llm import generate as extract_trial_rules_llm
@@ -16,7 +15,6 @@ try:
     from generate_xlsx import generate as generate_xlsx
     from validate import run_validation
 except ModuleNotFoundError:  # pragma: no cover - package import path
-    from scripts.compute_coverage import generate as compute_coverage
     from scripts.export_csv import generate as export_csv
     from scripts.extract_trial_rules import generate as extract_trial_rules
     from scripts.extract_trial_rules_llm import generate as extract_trial_rules_llm
@@ -42,7 +40,6 @@ def main() -> None:
         ("Fetch and curate trials", fetch_trials),
         ("Extract trial rules", extract_rules),
         ("Generate metrics", generate_metrics),
-        ("Compute coverage analysis", compute_coverage),
         ("Export CSV outputs", export_csv),
         ("Generate QA workbook", generate_xlsx),
         ("Validate outputs", run_validation),

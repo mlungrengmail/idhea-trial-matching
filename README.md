@@ -9,10 +9,8 @@ This repo syncs the public iDHEA Primary Eye Care [data dictionary](https://idhe
 - `data/trials.json`
 - `data/condition_membership.json`
 - `data/trial_rule_mappings.json`
-- `data/not_evaluable_fields.json` — gap fields with acquisition tiers
-- `data/enrichment_models.json` — AI model catalog for coverage enrichment
+- `data/not_evaluable_fields.json` — gap field descriptions and remediation notes
 - `outputs/metrics.json`
-- `outputs/coverage_analysis.json` — per-trial and aggregate coverage at each enrichment tier
 - `outputs/trials_labeled.csv`
 - `outputs/trial_rules.csv`
 - `outputs/missing_requirements_by_trial.csv`
@@ -53,7 +51,6 @@ uv run python scripts/fetch_idhea_metadata.py
 uv run python scripts/fetch_trials.py
 uv run python scripts/extract_trial_rules.py
 uv run python scripts/generate_metrics.py
-uv run python scripts/compute_coverage.py
 uv run python scripts/export_csv.py
 uv run python scripts/generate_xlsx.py
 uv run python scripts/validate.py
@@ -70,13 +67,11 @@ uv run python scripts/validate.py
    `extract_trial_rules_llm.py` adds optional `llm` or `hybrid` reasoning when an API key and model are configured.
 4. `generate_metrics.py`
    Freezes canonical counts (including sponsor and enrollment aggregation) used everywhere else.
-5. `compute_coverage.py`
-   Computes per-trial and aggregate coverage at each data enrichment tier (imaging only → +AI models → +OD clinical data → +lab/EHR → +questionnaire). Uses `data/enrichment_models.json` and acquisition tier metadata from `data/not_evaluable_fields.json`.
-6. `export_csv.py`
-   Produces the main GTM-friendly trial CSV plus audit/supporting CSVs.
-7. `generate_xlsx.py`
+5. `export_csv.py`
+   Produces the main trial CSV plus audit/supporting CSVs.
+6. `generate_xlsx.py`
    Builds a workbook that mirrors the canonical CSV and JSON outputs.
-8. `validate.py`
+7. `validate.py`
    Regenerates key derived views and checks for drift, referential integrity, noisy-trial regressions, and cross-artifact consistency.
 
 ## Condition search vs. condition categories
@@ -84,34 +79,6 @@ uv run python scripts/validate.py
 The pipeline searches ClinicalTrials.gov using **11 seed condition queries** (DME, DR, wet AMD, GA, glaucoma, RVO, pathological myopia, macular hole, uveitic ME, Stargardt, VMA). After deduplication and sub-condition grouping, trials are mapped into **curated condition categories** defined in `CONDITION_PRIORITY` (currently 11 categories, but this number can diverge from the seed count as the taxonomy evolves).
 
 When referencing condition counts in downstream documents, always clarify whether you mean "seed queries" or "mapped categories." This distinction caused the most common cross-document inconsistency in early deliverables.
-
-## Coverage tiers and gap taxonomy
-
-Each gap field in `data/not_evaluable_fields.json` has an `acquisition_tier` that describes how the gap can be closed:
-
-| Tier | Examples | Cost |
-|------|----------|------|
-| `od_clinical` | BCVA, IOP, slit lamp, refraction, diagnosis | $30-50K/site (EHR integration) |
-| `lab_ehr` | HbA1c, eGFR, systemic history, blood pressure | Varies (hospital/lab integration) |
-| `patient_questionnaire` | Treatment history, pregnancy status | ~$0 |
-| `specialized_equipment` | Visual field perimetry, angiography, genetic testing | $15K+ or not feasible |
-
-**Key distinction:** OD clinical data (BCVA, IOP, slit lamp findings) is already collected at optometry sites as part of standard workflow — the cost is for data integration, not equipment. Lab/EHR data (HbA1c, eGFR) requires hospital or laboratory system integration and is not available at typical OD practices.
-
-## Enrichment models
-
-`data/enrichment_models.json` catalogs AI models that can address specific gap criteria at zero marginal cost (already available). The coverage analysis uses this catalog to compute the Tier 1 ("+AI models") coverage level.
-
-## Downstream analysis
-
-The pipeline outputs clean data, but business deliverables (strategic plans, manuscripts, executive decks) require additional derived metrics:
-
-- **Coverage progression** (e.g., 19.1% → 93.8%): computed by `compute_coverage.py` and written to `outputs/coverage_analysis.json`
-- **Sponsor rankings and enrollment totals**: included in `outputs/metrics.json` via `top_sponsors` and `pipeline_open_enrollment_total`
-- **Gap closure costs by tier**: derived from `acquisition_tier` and `estimated_cost_per_site` in `not_evaluable_fields.json`
-- **GTM trial selection**: `trials_labeled.csv` includes `prescreening_fit` and `gtm_priority` columns
-
-If you build downstream artifacts from these outputs, treat `outputs/metrics.json` and `outputs/coverage_analysis.json` as sources of truth. Do not hand-maintain derived numbers in presentation assets — regenerate from the pipeline.
 
 ## Incremental updates
 
@@ -135,9 +102,7 @@ This fetches fresh data from ClinicalTrials.gov and prints added/removed/changed
   - `not_evaluable`: the criterion depends on data outside the public iDHEA field set.
   Rows can be produced by deterministic parsing, LLM extraction, or hybrid union; the `extraction_method`, `model_name`, `evidence_excerpt`, and `reasoning` fields keep that audit trail visible.
 - `trials_labeled.csv`
-  One row per curated trial with GTM-oriented labels such as `prescreening_fit`, `gtm_priority`, and missing-data flags.
-- `coverage_analysis.json`
-  Per-trial coverage at each enrichment tier, aggregate averages, gap summary with trials-affected counts, and persistent gaps that cannot be closed at any tier.
+  One row per curated trial with `prescreening_fit` and missing-data flags.
 
 ## Guardrails
 
