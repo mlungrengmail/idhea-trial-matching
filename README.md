@@ -1,6 +1,6 @@
 # iDHEA Trial Matching Pipeline
 
-This repo syncs the public iDHEA Primary Eye Care data dictionary, fetches and curates ophthalmic trials from ClinicalTrials.gov, extracts per-trial eligibility rules, and exports analyst-friendly CSVs plus a QA workbook.
+This repo syncs the public iDHEA Primary Eye Care https://idhea.net/ data dictionary, fetches and curates ophthalmic trials from ClinicalTrials.gov, extracts per-trial eligibility rules, and exports analyst-friendly CSVs plus a QA workbook.
 
 ## What it produces
 
