@@ -4,6 +4,8 @@
 
 This repo builds a trustworthy labeled ophthalmic trial dataset for GTM and feasibility work. It syncs the public iDHEA Primary Eye Care metadata, curates ClinicalTrials.gov studies, extracts per-trial rule mappings, and exports CSV/XLSX artifacts.
 
+This repo is pipeline-only. Internal GTM decks, narrative docs, and presentation generators should stay out of this repository.
+
 ## Commands
 
 ```bash
