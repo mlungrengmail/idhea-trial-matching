@@ -8,8 +8,6 @@ __pycache__/
 outputs/*.xlsx
 outputs/*.csv
 outputs/*.json
-outputs/*.docx
-outputs/*.pptx
 
 # OS
 .DS_Store
@@ -24,11 +22,3 @@ Thumbs.db
 
 # Generated raw/data snapshots
 data/raw/
-
-# Local/internal-only workspace files
-.claude/
-PLAN.md
-_gen_*.py
-_verify.py
-scripts/generate_gtm_deck.py
-scripts/generate_gtm_readout.py
